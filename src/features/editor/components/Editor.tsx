@@ -5,6 +5,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 
 import { Footer } from "@/features/editor/components/Footer";
 import { Navbar } from "@/features/editor/components/Navbar";
+import { ShapeSidebar } from "@/features/editor/components/ShapeSidebar";
 import { Sidebar } from "@/features/editor/components/Sidebar";
 import { Toolbar } from "@/features/editor/components/Toolbar";
 import { useEditor } from "@/features/editor/hooks/useEditor";
@@ -57,6 +58,10 @@ export const Editor = () => {
 
       <div className="absolute h-[calc(100%-68px)] w-full top-[68px] flex">
         <Sidebar
+          activeTool={activeTool}
+          onChangeActiveTool={onChangeActiveTool}
+        />
+        <ShapeSidebar
           activeTool={activeTool}
           onChangeActiveTool={onChangeActiveTool}
         />
