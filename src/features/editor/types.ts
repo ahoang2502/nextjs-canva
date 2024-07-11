@@ -62,6 +62,12 @@ export const DIAMOND_OPTIONS = {
 
 export type BuildEditorProps = {
   canvas: fabric.Canvas;
+  fillColor: string;
+  setFillColor: (value: string) => void;
+  strokeColor: string;
+  setStrokeColor: (value: string) => void;
+  strokeWidth: number;
+  setStrokeWidth: (value: number) => void;
 };
 
 export interface Editor {
@@ -71,4 +77,10 @@ export interface Editor {
   addTriangle: () => void;
   addInverseTriangle: () => void;
   addDiamond: () => void;
+  changeFillColor: (value: string) => void;
+  changeStrokeColor: (value: string) => void;
+  changeStrokeWidth: (value: number) => void;
+  fillColor: string;
+  strokeColor: string;
+  strokeWidth: number;
 }
