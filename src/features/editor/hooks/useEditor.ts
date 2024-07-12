@@ -159,11 +159,19 @@ const buildEditor = ({
       });
       canvas.renderAll();
     },
-    fillColor,
+    getActiveFillColor: () => {
+      const selectedObject = selectedObjects[0];
+
+      if (!selectedObject) return fillColor;
+
+      const value = selectedObject.get("fill") || fillColor;
+
+      return value as string;
+    },
     strokeColor,
     strokeWidth,
     canvas,
-    selectedObjects
+    selectedObjects,
   };
 };
 
