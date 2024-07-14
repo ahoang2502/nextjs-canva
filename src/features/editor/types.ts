@@ -96,11 +96,11 @@ export interface Editor {
   changeFillColor: (value: string) => void;
   changeStrokeColor: (value: string) => void;
   changeStrokeWidth: (value: number) => void;
-  strokeWidth: number;
   canvas: fabric.Canvas;
   selectedObjects: fabric.Object[];
   getActiveFillColor: () => string;
   getActiveStrokeColor: () => string;
+  getActiveStrokeWidth: () => number;
 }
 
 export const colors = [
