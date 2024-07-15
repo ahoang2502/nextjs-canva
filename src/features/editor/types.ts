@@ -106,6 +106,8 @@ export interface Editor {
   getActiveStrokeWidth: () => number;
   changeStrokeDashArray: (value: number[]) => void;
   getActiveStrokeDashArray: () => number[];
+  bringForward: () => void;
+  sendBackwards: () => void;
 }
 
 export const colors = [
