@@ -90,6 +90,8 @@ export type BuildEditorProps = {
 };
 
 export interface Editor {
+  getActiveOpacity: () => number;
+  changeOpacity: (value: number) => void;
   addCircle: () => void;
   addSoftRectangle: () => void;
   addRectangle: () => void;
