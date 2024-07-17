@@ -10,12 +10,13 @@ import {
   Editor,
   EditorHookProps,
   FILL_COLOR,
+  FONT_FAMILY,
   RECTANGLE_OPTIONS,
   STROKE_COLOR,
   STROKE_DASH_ARRAY,
   STROKE_WIDTH,
-  TRIANGLE_OPTIONS,
   TEXT_OPTIONS,
+  TRIANGLE_OPTIONS,
 } from "@/features/editor/types";
 import { isTextType } from "@/features/editor/utils";
 
@@ -30,6 +31,8 @@ const buildEditor = ({
   selectedObjects,
   strokeDashArray,
   setStrokeDashArray,
+  fontFamily,
+  setFontFamily,
 }: BuildEditorProps): Editor => {
   const getWorkspace = () => {
     return canvas.getObjects().find((object) => object.name === "clip");
@@ -60,21 +63,6 @@ const buildEditor = ({
       });
 
       addToCanvas(object);
-    },
-    getActiveOpacity: () => {
-      const selectedObject = selectedObjects[0];
-
-      if (!selectedObject) return 1;
-
-      const value = selectedObject.get("opacity") || 1;
-
-      return value;
-    },
-    changeOpacity: (value: number) => {
-      canvas.getActiveObjects().forEach((object) => {
-        object.set({ opacity: value });
-      });
-      canvas.renderAll();
     },
     bringForward: () => {
       canvas.getActiveObjects().forEach((object) => {
@@ -183,6 +171,16 @@ const buildEditor = ({
 
       addToCanvas(object);
     },
+    changeFontFamily: (value: string) => {
+      setFontFamily(value);
+
+      canvas.getActiveObjects().forEach((object) => {
+        if (isTextType(object.type)) {
+          object._set("fontFamily", value);
+        }
+      });
+      canvas.renderAll();
+    },
     changeFillColor: (value: string) => {
       setFillColor(value);
 
@@ -220,6 +218,21 @@ const buildEditor = ({
       });
       canvas.renderAll();
     },
+    changeOpacity: (value: number) => {
+      canvas.getActiveObjects().forEach((object) => {
+        object.set({ opacity: value });
+      });
+      canvas.renderAll();
+    },
+    getActiveOpacity: () => {
+      const selectedObject = selectedObjects[0];
+
+      if (!selectedObject) return 1;
+
+      const value = selectedObject.get("opacity") || 1;
+
+      return value;
+    },
     getActiveFillColor: () => {
       const selectedObject = selectedObjects[0];
 
@@ -256,6 +269,16 @@ const buildEditor = ({
 
       return value;
     },
+    getActiveFontFamily: () => {
+      const selectedObject = selectedObjects[0];
+
+      if (!selectedObject) return fontFamily;
+
+      // @ts-ignore
+      const value = selectedObject.get("fontFamily") || fontFamily;
+
+      return value;
+    },
     canvas,
     selectedObjects,
   };
@@ -271,6 +294,7 @@ export const useEditor = ({ clearSelectionCallback }: EditorHookProps) => {
   const [strokeWidth, setStrokeWidth] = useState(STROKE_WIDTH);
   const [strokeDashArray, setStrokeDashArray] =
     useState<number[]>(STROKE_DASH_ARRAY);
+  const [fontFamily, setFontFamily] = useState(FONT_FAMILY);
 
   useAutoResize({
     canvas,
@@ -296,6 +320,8 @@ export const useEditor = ({ clearSelectionCallback }: EditorHookProps) => {
         strokeWidth,
         setStrokeWidth,
         selectedObjects,
+        fontFamily,
+        setFontFamily,
       });
 
     return undefined;
@@ -306,6 +332,7 @@ export const useEditor = ({ clearSelectionCallback }: EditorHookProps) => {
     strokeWidth,
     selectedObjects,
     strokeDashArray,
+    fontFamily,
   ]);
 
   const init = useCallback(
