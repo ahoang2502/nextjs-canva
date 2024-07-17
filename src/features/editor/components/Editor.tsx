@@ -14,6 +14,7 @@ import { useEditor } from "@/features/editor/hooks/useEditor";
 import { ActiveTool, selectionDependentTools } from "@/features/editor/types";
 import { StrokeWidthSidebar } from "@/features/editor/components/StrokeWidthSidebar";
 import { OpacitySidebar } from "@/features/editor/components/OpacitySidebar";
+import { TextSidebar } from "@/features/editor/components/TextSidebar";
 
 export const Editor = () => {
   const [activeTool, setActiveTool] = useState<ActiveTool>("select");
@@ -94,6 +95,11 @@ export const Editor = () => {
           onChangeActiveTool={onChangeActiveTool}
         />
         <OpacitySidebar
+          editor={editor}
+          activeTool={activeTool}
+          onChangeActiveTool={onChangeActiveTool}
+        />
+        <TextSidebar
           editor={editor}
           activeTool={activeTool}
           onChangeActiveTool={onChangeActiveTool}
