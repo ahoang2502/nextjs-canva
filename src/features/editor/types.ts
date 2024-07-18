@@ -150,6 +150,12 @@ export interface Editor {
   changeFontFamily: (value: string) => void;
   getActiveFontWeight: () => number;
   changeFontWeight: (value: number) => void;
+  changeFontStyle: (value: string) => void;
+  getActiveFontStyle: () => string;
+  changeFontLinethrough: (value: boolean) => void;
+  getActiveFontLinethrough: () => boolean;
+  changeFontUnderline: (value: boolean) => void;
+  getActiveFontUnderline: () => boolean;
 }
 
 export const colors = [

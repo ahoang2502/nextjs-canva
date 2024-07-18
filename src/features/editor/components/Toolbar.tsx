@@ -1,8 +1,8 @@
 import { ArrowDown, ArrowUp, ChevronDown } from "lucide-react";
-import { BsBorderWidth } from "react-icons/bs";
-import { FaBold } from "react-icons/fa6";
-import { RxTransparencyGrid } from "react-icons/rx";
 import { useState } from "react";
+import { BsBorderWidth } from "react-icons/bs";
+import { FaBold, FaItalic, FaStrikethrough, FaUnderline } from "react-icons/fa";
+import { RxTransparencyGrid } from "react-icons/rx";
 
 import { Hint } from "@/components/Hint";
 import { Button } from "@/components/ui/button";
@@ -25,12 +25,18 @@ export const Toolbar = ({
   const initialStrokeColor = editor?.getActiveStrokeColor();
   const initialFontFamily = editor?.getActiveFontFamily();
   const initialFontWeight = editor?.getActiveFontWeight() || FONT_WEIGHT;
+  const initialFontStyle = editor?.getActiveFontStyle();
+  const initialFontLinethrough = editor?.getActiveFontLinethrough();
+  const initialFontUnderline = editor?.getActiveFontUnderline();
 
   const [properties, setProperties] = useState({
     fontWeight: initialFontWeight,
     fillColor: initialFillColor,
     strokeColor: initialStrokeColor,
     fontFamily: initialFontFamily,
+    fontStyle: initialFontStyle,
+    fontLinethrough: initialFontLinethrough,
+    fontUnderline: initialFontUnderline,
   });
 
   const selectedObjectType = editor?.selectedObjects[0]?.type;
@@ -44,6 +50,34 @@ export const Toolbar = ({
 
     editor?.changeFontWeight(newValue);
     setProperties((current) => ({ ...current, fontWeight: newValue }));
+  };
+
+  const toggleItalic = () => {
+    if (!selectedObject) return;
+
+    const isItalic = properties.fontStyle === "italic";
+    const newValue = isItalic ? "normal" : "italic";
+
+    editor?.changeFontStyle(newValue);
+    setProperties((current) => ({ ...current, fontStyle: newValue }));
+  };
+
+  const toggleLinethrough = () => {
+    if (!selectedObject) return;
+
+    const newValue = properties.fontLinethrough ? false : true;
+
+    editor?.changeFontLinethrough(newValue);
+    setProperties((current) => ({ ...current, fontLinethrough: newValue }));
+  };
+
+  const toggleUnderline = () => {
+    if (!selectedObject) return;
+
+    const newValue = properties.fontUnderline ? false : true;
+
+    editor?.changeFontUnderline(newValue);
+    setProperties((current) => ({ ...current, fontUnderline: newValue }));
   };
 
   if (editor?.selectedObjects.length === 0)
@@ -138,6 +172,54 @@ export const Toolbar = ({
               className={cn(properties.fontWeight > 500 && "bg-gray-100")}
             >
               <FaBold className="size-4" />
+            </Button>
+          </Hint>
+        </div>
+      )}
+
+      {/* FONT STYLE */}
+      {isText && (
+        <div className="flex items-center h-full justify-center">
+          <Hint label="Italic" side="bottom" sideOffset={5}>
+            <Button
+              onClick={toggleItalic}
+              size="icon"
+              variant="ghost"
+              className={cn(properties.fontStyle === "italic" && "bg-gray-100")}
+            >
+              <FaItalic className="size-4" />
+            </Button>
+          </Hint>
+        </div>
+      )}
+
+      {/* UNDERLINE */}
+      {isText && (
+        <div className="flex items-center h-full justify-center">
+          <Hint label="Underline" side="bottom" sideOffset={5}>
+            <Button
+              onClick={toggleUnderline}
+              size="icon"
+              variant="ghost"
+              className={cn(properties.fontUnderline && "bg-gray-100")}
+            >
+              <FaUnderline className="size-4" />
+            </Button>
+          </Hint>
+        </div>
+      )}
+
+      {/* STRIKE-THROUGH */}
+      {isText && (
+        <div className="flex items-center h-full justify-center">
+          <Hint label="Strike" side="bottom" sideOffset={5}>
+            <Button
+              onClick={toggleLinethrough}
+              size="icon"
+              variant="ghost"
+              className={cn(properties.fontLinethrough && "bg-gray-100")}
+            >
+              <FaStrikethrough className="size-4" />
             </Button>
           </Hint>
         </div>
