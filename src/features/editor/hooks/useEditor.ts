@@ -261,6 +261,15 @@ const buildEditor = ({
       });
       canvas.renderAll();
     },
+    changeTextAlign: (value: string) => {
+      canvas.getActiveObjects().forEach((object) => {
+        if (isTextType(object.type)) {
+          // @ts-ignore
+          object.set({ textAlign: value });
+        }
+      });
+      canvas.renderAll();
+    },
     getActiveOpacity: () => {
       const selectedObject = selectedObjects[0];
 
@@ -353,6 +362,16 @@ const buildEditor = ({
 
       // @ts-ignore
       const value = selectedObject.get("underline") || false;
+
+      return value;
+    },
+    getActiveTextAlign: () => {
+      const selectedObject = selectedObjects[0];
+
+      if (!selectedObject) return "left";
+
+      // @ts-ignore
+      const value = selectedObject.get("textAlign") || "left";
 
       return value;
     },
