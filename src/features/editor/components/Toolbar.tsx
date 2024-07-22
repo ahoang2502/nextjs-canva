@@ -5,6 +5,7 @@ import {
   ArrowDown,
   ArrowUp,
   ChevronDown,
+  Trash,
 } from "lucide-react";
 import { useState } from "react";
 import { BsBorderWidth } from "react-icons/bs";
@@ -14,7 +15,12 @@ import { RxTransparencyGrid } from "react-icons/rx";
 import { Hint } from "@/components/Hint";
 import { Button } from "@/components/ui/button";
 import { FontSizeInput } from "@/features/editor/components/FontSizeInput";
-import { ActiveTool, Editor, FONT_SIZE, FONT_WEIGHT } from "@/features/editor/types";
+import {
+  ActiveTool,
+  Editor,
+  FONT_SIZE,
+  FONT_WEIGHT,
+} from "@/features/editor/types";
 import { isTextType } from "@/features/editor/utils";
 import { cn } from "@/lib/utils";
 
@@ -343,6 +349,15 @@ export const Toolbar = ({
             className={cn(activeTool === "opacity" && "bg-gray-100")}
           >
             <RxTransparencyGrid className="size-4" />
+          </Button>
+        </Hint>
+      </div>
+
+      {/* DELETE */}
+      <div className="flex items-center h-full justify-center">
+        <Hint label="Delete" side="bottom" sideOffset={5}>
+          <Button onClick={() => editor?.delete()} size="icon" variant="destructive">
+            <Trash className="size-4" />
           </Button>
         </Hint>
       </div>
