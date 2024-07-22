@@ -11,6 +11,7 @@ import {
   EditorHookProps,
   FILL_COLOR,
   FONT_FAMILY,
+  FONT_SIZE,
   FONT_WEIGHT,
   RECTANGLE_OPTIONS,
   STROKE_COLOR,
@@ -270,6 +271,15 @@ const buildEditor = ({
       });
       canvas.renderAll();
     },
+    changeFontSize: (value: number) => {
+      canvas.getActiveObjects().forEach((object) => {
+        if (isTextType(object.type)) {
+          // @ts-ignore
+          object.set({ fontSize: value });
+        }
+      });
+      canvas.renderAll();
+    },
     getActiveOpacity: () => {
       const selectedObject = selectedObjects[0];
 
@@ -372,6 +382,16 @@ const buildEditor = ({
 
       // @ts-ignore
       const value = selectedObject.get("textAlign") || "left";
+
+      return value;
+    },
+    getActiveFontSize: () => {
+      const selectedObject = selectedObjects[0];
+
+      if (!selectedObject) return FONT_SIZE;
+
+      // @ts-ignore
+      const value = selectedObject.get("fontSize") || FONT_SIZE;
 
       return value;
     },
