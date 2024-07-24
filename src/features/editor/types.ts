@@ -125,6 +125,7 @@ export type BuildEditorProps = {
 };
 
 export interface Editor {
+  addImage: (value: string) => void;
   delete: () => void;
   addText: (value: string, options?: ITextboxOptions) => void;
   getActiveOpacity: () => number;
