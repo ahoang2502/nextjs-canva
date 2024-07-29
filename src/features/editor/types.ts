@@ -148,9 +148,13 @@ export type BuildEditorProps = {
   setStrokeDashArray: (value: number[]) => void;
   fontFamily: string;
   setFontFamily: (value: string) => void;
+  copy: () => void;
+  paste: () => void;
 };
 
 export interface Editor {
+  onCopy: () => void;
+  onPaste: () => void;
   changeImageFilter: (value: string) => void;
   addImage: (value: string) => void;
   delete: () => void;

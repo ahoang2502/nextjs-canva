@@ -21,6 +21,7 @@ import {
   TRIANGLE_OPTIONS,
 } from "@/features/editor/types";
 import { isTextType, createFilter } from "@/features/editor/utils";
+import { useClipboard } from "@/features/editor/hooks/useClipboard";
 
 const buildEditor = ({
   canvas,
@@ -35,6 +36,8 @@ const buildEditor = ({
   setStrokeDashArray,
   fontFamily,
   setFontFamily,
+  copy,
+  paste,
 }: BuildEditorProps): Editor => {
   const getWorkspace = () => {
     return canvas.getObjects().find((object) => object.name === "clip");
@@ -57,6 +60,8 @@ const buildEditor = ({
   };
 
   return {
+    onCopy: () => copy(),
+    onPaste: () => paste(),
     changeImageFilter: (value: string) => {
       const objects = canvas.getActiveObjects();
 
@@ -448,6 +453,8 @@ export const useEditor = ({ clearSelectionCallback }: EditorHookProps) => {
     useState<number[]>(STROKE_DASH_ARRAY);
   const [fontFamily, setFontFamily] = useState(FONT_FAMILY);
 
+  const { copy, paste } = useClipboard({ canvas });
+
   useAutoResize({
     canvas,
     container,
@@ -474,6 +481,8 @@ export const useEditor = ({ clearSelectionCallback }: EditorHookProps) => {
         selectedObjects,
         fontFamily,
         setFontFamily,
+        copy,
+        paste,
       });
 
     return undefined;
@@ -485,6 +494,8 @@ export const useEditor = ({ clearSelectionCallback }: EditorHookProps) => {
     selectedObjects,
     strokeDashArray,
     fontFamily,
+    copy,
+    paste,
   ]);
 
   const init = useCallback(
