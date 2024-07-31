@@ -38,6 +38,7 @@ const buildEditor = ({
   setFontFamily,
   copy,
   paste,
+  autoZoom,
 }: BuildEditorProps): Editor => {
   const getWorkspace = () => {
     return canvas.getObjects().find((object) => object.name === "clip");
@@ -60,6 +61,22 @@ const buildEditor = ({
   };
 
   return {
+    getWorkspace,
+    changeSize: (value: { width: number; height: number }) => {
+      const workspace = getWorkspace();
+
+      workspace?.set(value);
+      autoZoom();
+
+      // TODO: Save
+    },
+    changeBackground: (value: string) => {
+      const workspace = getWorkspace();
+
+      workspace?.set({ fill: value });
+      canvas.renderAll();
+      // TODO: Save
+    },
     enableDrawingMode: () => {
       canvas.discardActiveObject();
       canvas.renderAll();
@@ -470,7 +487,7 @@ export const useEditor = ({ clearSelectionCallback }: EditorHookProps) => {
 
   const { copy, paste } = useClipboard({ canvas });
 
-  useAutoResize({
+  const { autoZoom } = useAutoResize({
     canvas,
     container,
   });
@@ -484,6 +501,7 @@ export const useEditor = ({ clearSelectionCallback }: EditorHookProps) => {
   const editor = useMemo(() => {
     if (canvas)
       return buildEditor({
+        autoZoom,
         canvas,
         fillColor,
         setFillColor,
@@ -502,6 +520,7 @@ export const useEditor = ({ clearSelectionCallback }: EditorHookProps) => {
 
     return undefined;
   }, [
+    autoZoom,
     canvas,
     fillColor,
     strokeColor,
