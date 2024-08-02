@@ -24,6 +24,7 @@ import {
   TRIANGLE_OPTIONS,
 } from "@/features/editor/types";
 import { createFilter, isTextType } from "@/features/editor/utils";
+import { useHotkeys } from "@/features/editor/hooks/useHotkeys";
 
 const buildEditor = ({
   canRedo,
@@ -534,6 +535,8 @@ export const useEditor = ({ clearSelectionCallback }: EditorHookProps) => {
     clearSelectionCallback,
     save,
   });
+
+  useHotkeys({ canvas, undo, redo, save, copy, paste });
 
   const editor = useMemo(() => {
     if (canvas)
