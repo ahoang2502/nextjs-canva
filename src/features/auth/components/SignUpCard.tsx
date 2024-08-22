@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { FaGithub } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
+import { TriangleAlert } from "lucide-react";
 
 import { useSignUp } from "@/features/auth/hooks/useSignUp";
 
@@ -56,6 +57,13 @@ export const SignUpCard = () => {
           Use your email or another service to continue
         </CardDescription>
       </CardHeader>
+
+      {!!mutation.error && (
+        <div className="bg-destructive/15 p-3 rounded-md flex items-center gap-x-2 text-sm text-destructive mb-6">
+          <TriangleAlert className="size-4 " />
+          <p className="">Something went wrong.</p>
+        </div>
+      )}
 
       <CardContent className="space-y-5 px-0 pb-0">
         <form onSubmit={onCredentialsSignUp} className="space-y-2.5">
