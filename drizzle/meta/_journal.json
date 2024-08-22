@@ -8,6 +8,13 @@
       "when": 1724039532858,
       "tag": "0000_steady_marrow",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1724288639485,
+      "tag": "0001_shocking_warbound",
+      "breakpoints": true
     }
   ]
 }

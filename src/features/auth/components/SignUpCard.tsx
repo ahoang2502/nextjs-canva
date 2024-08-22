@@ -1,9 +1,12 @@
 "use client";
 
+import { signIn } from "next-auth/react";
 import Link from "next/link";
+import { useState } from "react";
 import { FaGithub } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
-import { signIn } from "next-auth/react";
+
+import { useSignUp } from "@/features/auth/hooks/useSignUp";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -13,10 +16,35 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Separator } from "@/components/ui/separator";
 
 export const SignUpCard = () => {
+  const mutation = useSignUp();
+
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
   const onProviderSignUp = (provider: "github" | "google") => {
     signIn(provider, { callbackUrl: "/" });
+  };
+
+  const onCredentialsSignUp = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    mutation.mutate(
+      { name, email, password },
+      {
+        onSuccess: () => {
+          signIn("credentials", {
+            email,
+            password,
+            callbackUrl: "/",
+          });
+        },
+      }
+    );
   };
 
   return (
@@ -30,8 +58,50 @@ export const SignUpCard = () => {
       </CardHeader>
 
       <CardContent className="space-y-5 px-0 pb-0">
+        <form onSubmit={onCredentialsSignUp} className="space-y-2.5">
+          <Input
+            disabled={mutation.isPending}
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            placeholder="Full Name"
+            type="text"
+            required
+          />
+
+          <Input
+            disabled={mutation.isPending}
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="Email"
+            type="email"
+            required
+          />
+
+          <Input
+            disabled={mutation.isPending}
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="Password"
+            type="password"
+            required
+            minLength={3}
+            maxLength={20}
+          />
+
+          <Button
+            disabled={mutation.isPending}
+            type="submit"
+            className="w-full"
+            size="lg"
+          >
+            Continue
+          </Button>
+        </form>
+
+        <Separator />
         <div className="flex flex-col gap-y-2.5">
           <Button
+            disabled={mutation.isPending}
             variant="outline"
             size="lg"
             className="w-full relative"
@@ -42,6 +112,7 @@ export const SignUpCard = () => {
           </Button>
 
           <Button
+            disabled={mutation.isPending}
             variant="outline"
             size="lg"
             className="w-full relative"
