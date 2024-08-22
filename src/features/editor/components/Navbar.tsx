@@ -11,6 +11,10 @@ import { BsCloudCheck } from "react-icons/bs";
 import { CiFileOn } from "react-icons/ci";
 import { useFilePicker } from "use-file-picker";
 
+import { UserButton } from "@/features/auth/components/UserButton";
+import { Logo } from "@/features/editor/components/Logo";
+import { ActiveTool, Editor } from "@/features/editor/types";
+
 import { Hint } from "@/components/Hint";
 import { Button } from "@/components/ui/button";
 import {
@@ -20,8 +24,6 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Separator } from "@/components/ui/separator";
-import { Logo } from "@/features/editor/components/Logo";
-import { ActiveTool, Editor } from "@/features/editor/types";
 import { cn } from "@/lib/utils";
 
 interface NavbarProps {
@@ -183,7 +185,7 @@ export const Navbar = ({
             </DropdownMenuContent>
           </DropdownMenu>
 
-          {/* User Button */}
+          <UserButton />
         </div>
       </div>
     </nav>
