@@ -15,6 +15,13 @@
       "when": 1724288639485,
       "tag": "0001_shocking_warbound",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1724585419751,
+      "tag": "0002_great_masked_marvel",
+      "breakpoints": true
     }
   ]
 }
