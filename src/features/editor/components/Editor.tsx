@@ -4,26 +4,31 @@ import { fabric } from "fabric";
 import { useCallback, useEffect, useRef, useState } from "react";
 
 import { StrokeColorSidebar } from "@/features/editor//components/StrokeColorSidebar";
+import { AISidebar } from "@/features/editor/components/AISidebar";
+import { DrawSidebar } from "@/features/editor/components/DrawSidebar";
 import { FillColorSidebar } from "@/features/editor/components/FillColorSidebar";
+import { FilterSidebar } from "@/features/editor/components/FilterSidebar";
+import { FontSidebar } from "@/features/editor/components/FontSidebar";
 import { Footer } from "@/features/editor/components/Footer";
+import { ImageSidebar } from "@/features/editor/components/ImageSidebar";
 import { Navbar } from "@/features/editor/components/Navbar";
+import { OpacitySidebar } from "@/features/editor/components/OpacitySidebar";
+import { RemoveBackgroundSidebar } from "@/features/editor/components/RemoveBgSidebar";
+import { SettingsSidebar } from "@/features/editor/components/SettingsSidebar";
 import { ShapeSidebar } from "@/features/editor/components/ShapeSidebar";
 import { Sidebar } from "@/features/editor/components/Sidebar";
+import { StrokeWidthSidebar } from "@/features/editor/components/StrokeWidthSidebar";
+import { TextSidebar } from "@/features/editor/components/TextSidebar";
 import { Toolbar } from "@/features/editor/components/Toolbar";
 import { useEditor } from "@/features/editor/hooks/useEditor";
 import { ActiveTool, selectionDependentTools } from "@/features/editor/types";
-import { StrokeWidthSidebar } from "@/features/editor/components/StrokeWidthSidebar";
-import { OpacitySidebar } from "@/features/editor/components/OpacitySidebar";
-import { TextSidebar } from "@/features/editor/components/TextSidebar";
-import { FontSidebar } from "@/features/editor/components/FontSidebar";
-import { ImageSidebar } from "@/features/editor/components/ImageSidebar";
-import { FilterSidebar } from "@/features/editor/components/FilterSidebar";
-import { AISidebar } from "@/features/editor/components/AISidebar";
-import { RemoveBackgroundSidebar } from "@/features/editor/components/RemoveBgSidebar";
-import { DrawSidebar } from "@/features/editor/components/DrawSidebar";
-import { SettingsSidebar } from "@/features/editor/components/SettingsSidebar";
+import { ResponseType } from "@/features/projects/api/useGetProject";
 
-export const Editor = () => {
+interface EditorProps {
+  initialData: ResponseType["data"];
+}
+
+export const Editor = ({ initialData }: EditorProps) => {
   const [activeTool, setActiveTool] = useState<ActiveTool>("select");
 
   const onClearSelection = useCallback(() => {
