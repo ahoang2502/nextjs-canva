@@ -1,6 +1,7 @@
 "use client";
 
 import { fabric } from "fabric";
+import debounce from "lodash.debounce";
 import { useCallback, useEffect, useRef, useState } from "react";
 
 import { StrokeColorSidebar } from "@/features/editor//components/StrokeColorSidebar";
@@ -32,11 +33,11 @@ interface EditorProps {
 export const Editor = ({ initialData }: EditorProps) => {
   const { mutate: mutateUpdateProject } = useUpdateProject(initialData.id);
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const debouncedSave = useCallback(
-    (values: { json: string; height: number; width: number }) => {
-      // Add debounce
+    debounce((values: { json: string; height: number; width: number }) => {
       mutateUpdateProject(values);
-    },
+    }, 500),
     [mutateUpdateProject]
   );
 
