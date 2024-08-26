@@ -30,9 +30,15 @@ interface EditorProps {
 }
 
 export const Editor = ({ initialData }: EditorProps) => {
-  const mutation = useUpdateProject(initialData.id);
+  const { mutate: mutateUpdateProject } = useUpdateProject(initialData.id);
 
-  const debouncedSave = useCallback(()=>{},[])
+  const debouncedSave = useCallback(
+    (values: { json: string; height: number; width: number }) => {
+      // Add debounce
+      mutateUpdateProject(values);
+    },
+    [mutateUpdateProject]
+  );
 
   const [activeTool, setActiveTool] = useState<ActiveTool>("select");
 
@@ -43,7 +49,11 @@ export const Editor = ({ initialData }: EditorProps) => {
   }, [activeTool]);
 
   const { init, editor } = useEditor({
+    defaultState: initialData.json,
+    defaultWidth: initialData.width,
+    defaultHeight: initialData.height,
     clearSelectionCallback: onClearSelection,
+    saveCallback: debouncedSave,
   });
 
   const onChangeActiveTool = useCallback(
@@ -87,6 +97,7 @@ export const Editor = ({ initialData }: EditorProps) => {
   return (
     <div className="h-full flex flex-col">
       <Navbar
+        id={initialData.id}
         editor={editor}
         activeTool={activeTool}
         onChangeActiveTool={onChangeActiveTool}

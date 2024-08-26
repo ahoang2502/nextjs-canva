@@ -143,7 +143,15 @@ export const TEXT_OPTIONS = {
 };
 
 export interface EditorHookProps {
+  defaultState?: string;
+  defaultHeight?: number;
+  defaultWidth?: number;
   clearSelectionCallback?: () => void;
+  saveCallback?: (values: {
+    json: string;
+    height: number;
+    width: number;
+  }) => void;
 }
 
 export type BuildEditorProps = {
