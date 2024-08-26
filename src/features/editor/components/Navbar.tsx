@@ -115,6 +115,7 @@ export const Navbar = ({
           </Button>
         </Hint>
 
+        {/* AUTO-SAVE */}
         <Separator orientation="vertical" className="mx-2" />
         <div className="flex items-center gap-x-2">
           <BsCloudCheck className="size-[20px] text-muted-foreground" />

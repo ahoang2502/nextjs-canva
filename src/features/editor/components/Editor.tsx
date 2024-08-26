@@ -23,12 +23,17 @@ import { Toolbar } from "@/features/editor/components/Toolbar";
 import { useEditor } from "@/features/editor/hooks/useEditor";
 import { ActiveTool, selectionDependentTools } from "@/features/editor/types";
 import { ResponseType } from "@/features/projects/api/useGetProject";
+import { useUpdateProject } from "@/features/projects/api/useUpdateProject";
 
 interface EditorProps {
   initialData: ResponseType["data"];
 }
 
 export const Editor = ({ initialData }: EditorProps) => {
+  const mutation = useUpdateProject(initialData.id);
+
+  const debouncedSave = useCallback(()=>{},[])
+
   const [activeTool, setActiveTool] = useState<ActiveTool>("select");
 
   const onClearSelection = useCallback(() => {
