@@ -13,6 +13,7 @@ import {
 import { useRouter } from "next/navigation";
 import React from "react";
 
+import { useDuplicateProject } from "@/features/projects/api/useDuplicateProject";
 import { useGetProjects } from "@/features/projects/api/useGetProjects";
 
 import { Button } from "@/components/ui/button";
@@ -29,6 +30,11 @@ export const ProjectsSection = () => {
 
   const { data, status, fetchNextPage, isFetchingNextPage, hasNextPage } =
     useGetProjects();
+  const duplicateMutation = useDuplicateProject();
+
+  const onCopy = (id: string) => {
+    duplicateMutation.mutate({ id });
+  };
 
   if (status === "pending")
     return (
@@ -112,8 +118,8 @@ export const ProjectsSection = () => {
                       <DropdownMenuContent align="end" className="w-60">
                         <DropdownMenuItem
                           className="h-10 cursor-pointer"
-                          disabled={false}
-                          onClick={() => {}}
+                          disabled={duplicateMutation.isPending}
+                          onClick={() => onCopy(project.id)}
                         >
                           <CopyIcon className="size-4 mr-2 " />
                           Make a copy
