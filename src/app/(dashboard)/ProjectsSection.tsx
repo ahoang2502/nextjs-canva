@@ -13,8 +13,10 @@ import {
 import { useRouter } from "next/navigation";
 import React from "react";
 
+import { useDeleteProject } from "@/features/projects/api/useDeleteProject";
 import { useDuplicateProject } from "@/features/projects/api/useDuplicateProject";
 import { useGetProjects } from "@/features/projects/api/useGetProjects";
+import { useConfirm } from "@/hooks/useConfirm";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -31,9 +33,21 @@ export const ProjectsSection = () => {
   const { data, status, fetchNextPage, isFetchingNextPage, hasNextPage } =
     useGetProjects();
   const duplicateMutation = useDuplicateProject();
+  const removeMutation = useDeleteProject();
+
+  const [ConfirmDialog, confirm] = useConfirm(
+    "Are you sure?",
+    "You are about to delete this project"
+  );
 
   const onCopy = (id: string) => {
     duplicateMutation.mutate({ id });
+  };
+
+  const onDelete = async (id: string) => {
+    const ok = await confirm();
+
+    if (ok) removeMutation.mutate({ id });
   };
 
   if (status === "pending")
@@ -61,7 +75,7 @@ export const ProjectsSection = () => {
       </div>
     );
 
-  if (!data.pages.length)
+  if (!data.pages.length || !data.pages[0].data.length)
     return (
       <div className="space-y-4">
         <h3 className="font-semibold text-lg">Recent projects</h3>
@@ -75,6 +89,8 @@ export const ProjectsSection = () => {
 
   return (
     <div className="space-y-4 ">
+      <ConfirmDialog />
+
       <h3 className="font-semibold text-lg">Recent projects</h3>
 
       <Table>
@@ -127,8 +143,8 @@ export const ProjectsSection = () => {
 
                         <DropdownMenuItem
                           className="h-10 cursor-pointer"
-                          disabled={false}
-                          onClick={() => {}}
+                          disabled={removeMutation.isPending}
+                          onClick={() => onDelete(project.id)}
                         >
                           <Trash className="size-4 mr-2 " />
                           Delete
