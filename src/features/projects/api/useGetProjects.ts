@@ -12,7 +12,7 @@ export const useGetProjects = () => {
   const query = useInfiniteQuery<ResponseType, Error>({
     initialPageParam: 1,
     getNextPageParam: (lastPage) => lastPage.nextPage,
-    queryKey: ["project"],
+    queryKey: ["projects"],
     queryFn: async ({ pageParam }) => {
       const response = await client.api.projects.$get({
         query: { page: (pageParam as number).toString(), limit: "5" },

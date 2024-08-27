@@ -10,6 +10,8 @@ export const useAutoResize = ({ canvas, container }: UseAutoResizeProps) => {
   const autoZoom = useCallback(() => {
     if (!canvas || !container) return;
 
+    console.log({ heli: container.offsetHeight });
+
     const width = container.offsetWidth;
     const height = container.offsetHeight;
 
@@ -17,6 +19,7 @@ export const useAutoResize = ({ canvas, container }: UseAutoResizeProps) => {
     canvas.setHeight(height);
 
     const center = canvas.getCenter();
+    const zoomRatio = 0.85;
     const localWorkspace = canvas
       .getObjects()
       .find((object) => object.name === "clip");
@@ -26,7 +29,6 @@ export const useAutoResize = ({ canvas, container }: UseAutoResizeProps) => {
       width: width,
       height: height,
     });
-    const zoomRatio = 0.85;
 
     const zoom = zoomRatio * scale;
 
