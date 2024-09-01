@@ -19,6 +19,7 @@ import { SettingsSidebar } from "@/features/editor/components/SettingsSidebar";
 import { ShapeSidebar } from "@/features/editor/components/ShapeSidebar";
 import { Sidebar } from "@/features/editor/components/Sidebar";
 import { StrokeWidthSidebar } from "@/features/editor/components/StrokeWidthSidebar";
+import { TemplateSidebar } from "@/features/editor/components/TemplateSidebar";
 import { TextSidebar } from "@/features/editor/components/TextSidebar";
 import { Toolbar } from "@/features/editor/components/Toolbar";
 import { useEditor } from "@/features/editor/hooks/useEditor";
@@ -170,6 +171,11 @@ export const Editor = ({ initialData }: EditorProps) => {
           onChangeActiveTool={onChangeActiveTool}
         />
         <SettingsSidebar
+          editor={editor}
+          activeTool={activeTool}
+          onChangeActiveTool={onChangeActiveTool}
+        />
+        <TemplateSidebar
           editor={editor}
           activeTool={activeTool}
           onChangeActiveTool={onChangeActiveTool}
