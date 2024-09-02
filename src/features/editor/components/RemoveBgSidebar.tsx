@@ -9,6 +9,7 @@ import { ToolSidebarClose } from "@/features/editor/components/ToolSidebarClose"
 import { ToolSidebarHeader } from "@/features/editor/components/ToolSidebarHeader";
 import { ActiveTool, Editor } from "@/features/editor/types";
 import { cn } from "@/lib/utils";
+import { usePaywall } from "@/features/subscriptions/hooks/usePaywall";
 
 interface RemoveBackgroundSidebarProps {
   editor: Editor | undefined;
@@ -22,6 +23,7 @@ export const RemoveBackgroundSidebar = ({
   onChangeActiveTool,
 }: RemoveBackgroundSidebarProps) => {
   const mutation = useRemoveBackground();
+  const { triggerPaywall, shouldBlock } = usePaywall();
 
   const selectedObject = editor?.selectedObjects[0];
 
@@ -33,7 +35,10 @@ export const RemoveBackgroundSidebar = ({
   };
 
   const onClick = () => {
-    // TODO Block with paywall
+    if (shouldBlock) {
+      triggerPaywall();
+      return;
+    }
 
     mutation.mutate(
       { image: imageSrc },

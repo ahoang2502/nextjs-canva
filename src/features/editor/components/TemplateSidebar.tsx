@@ -1,4 +1,4 @@
-import { AlertTriangle, Loader } from "lucide-react";
+import { AlertTriangle, Loader, Crown } from "lucide-react";
 import Image from "next/image";
 
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -11,6 +11,7 @@ import {
 } from "@/features/projects/api/useGetTemplates";
 import { cn } from "@/lib/utils";
 import { useConfirm } from "@/hooks/useConfirm";
+import { usePaywall } from "@/features/subscriptions/hooks/usePaywall";
 
 interface TemplateSidebarProps {
   editor: Editor | undefined;
@@ -27,6 +28,7 @@ export const TemplateSidebar = ({
     "Are you sure?",
     "You are about to replace the current project with this project."
   );
+  const { shouldBlock, triggerPaywall } = usePaywall();
 
   const { data, isLoading, isError } = useGetTemplates({
     limit: "20",
@@ -38,6 +40,11 @@ export const TemplateSidebar = ({
   };
 
   const onClick = async (template: ResponseType["data"][0]) => {
+    if (template.isPro && shouldBlock) {
+      triggerPaywall();
+      return;
+    }
+
     const ok = await confirm();
 
     if (ok) editor?.loadJson(template.json);
@@ -91,6 +98,12 @@ export const TemplateSidebar = ({
                       alt={template.name || "Template"}
                       className="object-cover"
                     />
+
+                    {template.isPro && (
+                      <div className="absolute top-2 right-2 size-8 items-center flex justify-center bg-black/50 rounded-full">
+                        <Crown className="size-4 fill-yellow-500 text-yellow-500" />
+                      </div>
+                    )}
 
                     <div className="opacity-0 group-hover:opacity-100 absolute left-0 bottom-0 w-full text-[10px] truncate text-white p-1 bg-black/50 text-left">
                       {template.name}

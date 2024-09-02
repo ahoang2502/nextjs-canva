@@ -9,6 +9,7 @@ import { ToolSidebarClose } from "@/features/editor/components/ToolSidebarClose"
 import { ToolSidebarHeader } from "@/features/editor/components/ToolSidebarHeader";
 import { ActiveTool, Editor } from "@/features/editor/types";
 import { cn } from "@/lib/utils";
+import { usePaywall } from "@/features/subscriptions/hooks/usePaywall";
 
 interface AISidebarProps {
   editor: Editor | undefined;
@@ -22,13 +23,17 @@ export const AISidebar = ({
   onChangeActiveTool,
 }: AISidebarProps) => {
   const mutation = useGenerativeImage();
+  const { triggerPaywall, shouldBlock } = usePaywall();
 
   const [value, setValue] = useState("");
 
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    // TODO: Block with paywall
+    if (shouldBlock) {
+      triggerPaywall();
+      return;
+    }
 
     mutation.mutateAsync({ prompt: value }).then(({ data }) => {
       editor?.addImage(data);

@@ -10,6 +10,7 @@ import {
 import { useCreateProject } from "@/features/projects/api/useCreateProject";
 
 import { TemplateCard } from "./TemplateCard";
+import { usePaywall } from "@/features/subscriptions/hooks/usePaywall";
 
 export const TemplatesSection = () => {
   const router = useRouter();
@@ -19,8 +20,14 @@ export const TemplatesSection = () => {
     limit: "4",
   });
   const mutation = useCreateProject();
+  const { triggerPaywall, shouldBlock } = usePaywall();
 
   const onClick = (template: ResponseType["data"][0]) => {
+    if (template.isPro && shouldBlock) {
+      triggerPaywall();
+      return;
+    }
+
     mutation.mutate(
       {
         name: `${template.name} project`,
