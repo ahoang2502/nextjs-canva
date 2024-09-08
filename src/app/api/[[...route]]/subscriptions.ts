@@ -1,10 +1,12 @@
 import { verifyAuth } from "@hono/auth-js";
 import { Hono } from "hono";
 import Stripe from "stripe";
+import { eq } from "drizzle-orm";
 
 import { stripe } from "@/lib/stripe";
 import { db } from "@/db/drizzle";
 import { subscriptions } from "@/db/schema";
+import { checkIsActive } from "@/features/subscriptions/lib";
 
 const app = new Hono()
   .post("/checkout", verifyAuth(), async (c) => {
@@ -73,7 +75,41 @@ const app = new Hono()
       });
     }
 
+    if (event.type === "invoice.payment_succeeded") {
+      const externalSubscription = await stripe.subscriptions.retrieve(
+        session.subscription as string
+      );
+
+      if (!session?.metadata?.userId)
+        return c.json({ error: "Invalid session" }, 400);
+
+      await db
+        .update(subscriptions)
+        .set({
+          status: externalSubscription.status,
+          currentPeriodEnd: new Date(
+            externalSubscription.current_period_end * 1000
+          ),
+          updatedAt: new Date(),
+        })
+        .where(eq(subscriptions.id, externalSubscription.id));
+    }
+
     return c.json(null, 200);
+  })
+  .get("/current", verifyAuth(), async (c) => {
+    const auth = c.get("authUser");
+
+    if (!auth.token?.id) return c.json({ error: "Unauthorized" }, 401);
+
+    const [subscription] = await db
+      .select()
+      .from(subscriptions)
+      .where(eq(subscriptions.userId, auth.token.id));
+
+    const active = checkIsActive(subscription);
+
+    return c.json({ data: { ...subscription, active } });
   });
 
 export default app;
