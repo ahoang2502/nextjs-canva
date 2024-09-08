@@ -11,26 +11,36 @@ import { usePathname } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { SidebarItem } from "./SidebarItem";
+import { usePaywall } from "@/features/subscriptions/hooks/usePaywall";
+import { useCheckout } from "@/features/subscriptions/api/useCheckout";
 
 export const SidebarRoutes = () => {
   const pathname = usePathname();
+
+  const { shouldBlock, isLoading } = usePaywall();
+  const mutation = useCheckout();
+
   return (
     <div className="flex flex-col gap-y-4 flex-1">
-      <div className="px-4">
-        <Button
-          onClick={() => {}}
-          className="w-full rounded-xl border-none hover:bg-white hover:opacity-75 transition"
-          variant="outline"
-          size="lg"
-        >
-          <CrownIcon className="size-4 mr-2 fill-yellow-500 text-yellow-500" />
-          Upgrade to Canva Pro
-        </Button>
-      </div>
-
-      <div className="px-3">
-        <Separator />
-      </div>
+      {shouldBlock && !isLoading && (
+        <>
+          <div className="px-3">
+            <Button
+              onClick={() => mutation.mutate()}
+              disabled={mutation.isPending}
+              className="w-full rounded-xl border-none hover:bg-white hover:opacity-75 transition"
+              variant="outline"
+              size="lg"
+            >
+              <CrownIcon className="size-4 mr-2 fill-yellow-500 text-yellow-500" />
+              Upgrade to Canva Pro
+            </Button>
+          </div>
+          <div className="px-3">
+            <Separator />
+          </div>
+        </>
+      )}
 
       <ul className="flex flex-col gap-y-1 px-3">
         <SidebarItem
