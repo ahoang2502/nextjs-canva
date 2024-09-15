@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 
+import { FailModal } from "@/features/subscriptions/components/FailModal";
 import { SubscriptionModal } from "@/features/subscriptions/components/SubscriptionModal";
 
 export const Modals = () => {
@@ -16,6 +17,7 @@ export const Modals = () => {
   return (
     <>
       <SubscriptionModal />
+      <FailModal />
     </>
   );
 };

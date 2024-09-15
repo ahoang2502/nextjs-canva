@@ -7,6 +7,7 @@ import { Toaster } from "@/components/ui/sonner";
 import { Providers } from "@/components/Providers";
 import "./globals.css";
 import { Modals } from "@/components/Modals";
+import { SubscriptionAlert } from "@/features/subscriptions/components/SubscriptionAlert";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -30,6 +31,7 @@ export default async function RootLayout({
           <Providers>
             <Toaster />
             <Modals />
+            <SubscriptionAlert />
             {children}
           </Providers>
         </body>

@@ -13,12 +13,23 @@ import { Separator } from "@/components/ui/separator";
 import { SidebarItem } from "./SidebarItem";
 import { usePaywall } from "@/features/subscriptions/hooks/usePaywall";
 import { useCheckout } from "@/features/subscriptions/api/useCheckout";
+import { useBilling } from "@/features/subscriptions/api/useBilling";
 
 export const SidebarRoutes = () => {
   const pathname = usePathname();
 
-  const { shouldBlock, isLoading } = usePaywall();
+  const { shouldBlock, isLoading, triggerPaywall } = usePaywall();
+  const billingMutation = useBilling();
   const mutation = useCheckout();
+
+   const onClick = () => {
+     if (shouldBlock) {
+       triggerPaywall();
+       return;
+     }
+
+     billingMutation.mutate();
+   };
 
   return (
     <div className="flex flex-col gap-y-4 flex-1">
@@ -60,7 +71,7 @@ export const SidebarRoutes = () => {
           href={pathname}
           icon={CreditCard}
           label="Billing"
-          onClick={() => {}}
+          onClick={onClick}
         />
         <SidebarItem
           href="mailto:hello@gmail.com"
