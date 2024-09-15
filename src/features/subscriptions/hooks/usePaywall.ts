@@ -6,7 +6,7 @@ export const usePaywall = () => {
     useGetSubscription();
   const subscriptionModal = useSubscription();
 
-  const shouldBlock = !subscription?.active;
+  const shouldBlock = isLoadingSubscription || !subscription?.active;
 
   return {
     isLoading: isLoadingSubscription,

@@ -1,7 +1,7 @@
 "use client";
 
 import { CreditCard, Crown, Loader, LogOutIcon } from "lucide-react";
-import { useSession, signOut } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
@@ -11,12 +11,23 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useBilling } from "@/features/subscriptions/api/useBilling";
 import { usePaywall } from "@/features/subscriptions/hooks/usePaywall";
 
 export const UserButton = () => {
   const session = useSession();
 
   const { shouldBlock, triggerPaywall, isLoading } = usePaywall();
+  const mutation = useBilling();
+
+  const onClick = () => {
+    if (shouldBlock) {
+      triggerPaywall();
+      return;
+    }
+
+    mutation.mutate();
+  };
 
   if (session.status === "loading")
     return <Loader className="size-4 animate-spin text-muted-foreground" />;
@@ -46,7 +57,11 @@ export const UserButton = () => {
       </DropdownMenuTrigger>
 
       <DropdownMenuContent align="end" className="w-60">
-        <DropdownMenuItem onClick={() => {}} disabled={false} className="h-10">
+        <DropdownMenuItem
+          onClick={onClick}
+          disabled={mutation.isPending}
+          className="h-10"
+        >
           <CreditCard className="size-4 mr-2" /> Billing
         </DropdownMenuItem>
 

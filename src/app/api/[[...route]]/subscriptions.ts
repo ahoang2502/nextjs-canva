@@ -9,6 +9,27 @@ import { subscriptions } from "@/db/schema";
 import { checkIsActive } from "@/features/subscriptions/lib";
 
 const app = new Hono()
+  .post("/billing", verifyAuth(), async (c) => {
+    const auth = c.get("authUser");
+
+    if (!auth.token?.id) return c.json({ error: "Unauthorized" }, 401);
+
+    const [subscription] = await db
+      .select()
+      .from(subscriptions)
+      .where(eq(subscriptions.userId, auth.token.id));
+
+    if (!subscription) return c.json({ error: "No subscription found" }, 404);
+
+    const session = await stripe.billingPortal.sessions.create({
+      customer: subscription.customerId,
+      return_url: `${process.env.NEXT_PUBLIC_APP_URL}`,
+    });
+
+    if (!session.url) return c.json({ error: "Failed to create session" }, 400);
+
+    return c.json({ data: session.url });
+  })
   .post("/checkout", verifyAuth(), async (c) => {
     const auth = c.get("authUser");
 
